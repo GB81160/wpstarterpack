@@ -31,7 +31,7 @@ Chaque module est démarré automatiquement par `Core\Init::run()` :
 |------------------------------|-------------------------------------------------------------------------------------------------------------------|
 | **TagManager**               | Intègre et déclenche Google Tag Manager sur chaque page.   -> menu réglages de wordpress                                                      |
 | **LoginRedirect**            | Redirige tout accès à `/wp-admin` ou `/wp-login.php` vers `/connect`.   -> menu réglages de wordpress                                            |
-| **DuplicatePost**            | Active la duplication d’articles et de pages directement depuis l’admin, par défaut.                              |
+| **DuplicatePost**            | Active la duplication d’articles et de pages directement depuis le tableau de bord par défaut.                              |
 | **LoginLimiter**             | Verrouille les tentatives de connexion (5 essais max sur 30 min), même pour des comptes inexistants, cela évite le flood.             |
 | **HideVersion**              | Cache la version de WordPress (meta generator, paramètres `?ver` sur les assets), pour réduire la surface d’attaque. |
 | **DisableXmlRpc**            | Désactive complètement XML-RPC, les pingbacks/RSD/WLW, et bloque toute requête directe vers `xmlrpc.php`.         |
