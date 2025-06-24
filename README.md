@@ -12,7 +12,7 @@ Un **Must-Use Plugin** WordPress, placé dans le dossier `wp-content/mu-plugins/
 
 ## Installation
 
-1. **Copiez** le dossier `wpsoluces-core/` entier dans :  
+1. **Copiez** le dossier `wpsoluces-core/` entier ainsi que `wp-soluces-core.php` dans :  
 ```
 
 wp-content/mu-plugins/
