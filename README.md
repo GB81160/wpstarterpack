@@ -38,3 +38,5 @@ Chaque module est démarré automatiquement par `Core\Init::run()` :
 ## Support et contributions
 
 Pour toute suggestion ou bug, ouvrez une issue sur le dépôt Git ou contactez Guillaume de WPSoluces.
+
+https://wpsoluces.com/
