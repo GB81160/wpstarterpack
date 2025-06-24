@@ -1,15 +1,4 @@
 # WPSoluces Core (MU-Plugin)
-
-Un **Must-Use Plugin** WordPress, placé dans le dossier `wp-content/mu-plugins/wpsoluces-core/`, qui regroupe plusieurs modules prêts à l’emploi pour renforcer et personnaliser votre site.
-
----
-
-## Installation
-
-Un **Must-Use Plugin** WordPress, placé dans le dossier `wp-content/mu-plugins/wpsoluces-core/`, qui regroupe plusieurs modules prêts à l’emploi pour renforcer et personnaliser votre site.
-
----
-
 ## Installation
 
 1. **Copiez** le dossier `wpsoluces-core/` entier ainsi que `wp-soluces-core.php` dans :  
