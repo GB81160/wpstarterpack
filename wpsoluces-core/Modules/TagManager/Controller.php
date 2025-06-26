@@ -14,7 +14,7 @@ class Controller {
     /* ---------------------------------------------------------------------
      * HOOKS
      * ------------------------------------------------------------------ */
-    public static function register(): void {
+   public static function register(): void {
 
         /* ADMIN */
         add_action( 'admin_menu',            [ self::class, 'add_settings_page' ] );
@@ -39,9 +39,8 @@ class Controller {
         );
 
         /* FRONT */
-        add_action( 'wp_enqueue_scripts', [ self::class, 'enqueue_gtm_script' ], 1 );
-        add_action( 'wp_head',           [ self::class, 'print_head_script' ], 1 );
-        add_action( 'wp_body_open',      [ self::class, 'print_body_noscript' ] );
+        add_action( 'wp_head',      [ self::class, 'print_head_snippet' ], 1 );
+        add_action( 'wp_body_open', [ self::class, 'print_body_noscript' ] );
     }
 
     /* ---------------------------------------------------------------------
@@ -66,7 +65,13 @@ class Controller {
                 'type'              => 'string',
                 'sanitize_callback' => [ self::class, 'sanitize_gtm_id' ],
                 'default'           => '',
-@@ -129,52 +131,61 @@ class Controller {
+            ]
+@@ -124,57 +124,65 @@ class Controller {
+    }
+
+    public static function render_settings_page(): void { View::render_page(); }
+
+    public static function enqueue_validator_js( string $hook ): void {
         if ( $hook === self::$page_hook ) {
             wp_enqueue_script(
                 'wpsc-gtm-validator',
@@ -87,31 +92,30 @@ class Controller {
     }
 
     /* ---------------------------------------------------------------------
-     * FRONT · enqueue script + Body noscript
+     * FRONT · Head + Body
      * ------------------------------------------------------------------ */
-    public static function enqueue_gtm_script(): void {
+    public static function print_head_snippet(): void {
         if ( ! $s = self::settings() ) { return; }
-
-        self::$gtm_id = $s['id'];
-    }
-
-    public static function print_head_script(): void {
-        if ( self::$gtm_id === '' ) { return; }
 
         printf(
             "\n<!-- Google Tag Manager -->\n"
           . "<script>\n"
-          . "document.addEventListener('DOMContentLoaded', function() {\n"
-          . "    (function(w,d,s,l,i){\n"
-          . "        w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});\n"
-          . "        var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';\n"
-          . "        j.async=true; j.defer=true; j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;\n"
-          . "        f.parentNode.insertBefore(j,f);\n"
-          . "    })(window,document,'script','dataLayer','%s');\n"
-          . "});\n"
+          . "    document.addEventListener('DOMContentLoaded', function () {\n"
+          . "        (function (w, d, s, l, i) {\n"
+          . "            w[l] = w[l] || [];\n"
+          . "            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });\n"
+          . "            var f = d.getElementsByTagName(s)[0];\n"
+          . "            var j = d.createElement(s);\n"
+          . "            var dl = l !== 'dataLayer' ? '&l=' + l : '';\n"
+          . "            j.async = true;\n"
+          . "            j.defer = true;\n"
+          . "            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;\n"
+          . "            f.parentNode.insertBefore(j, f);\n"
+          . "        })(window, document, 'script', 'dataLayer', '%s');\n"
+          . "    });\n"
           . "</script>\n"
           . "<!-- End Google Tag Manager -->\n",
-            esc_js( self::$gtm_id )
+            esc_js( $s['id'] )
         );
     }
 
