@@ -12,9 +12,9 @@ class Model {
 	public const OPTION_KEY_ID     = 'wpsc_gtm_id';
 	public const OPTION_KEY_ACTIVE = 'wpsc_gtm_active';
 
-	/* Transient */
-	private const TRANSIENT_KEY = 'wpsc_gtm_settings';
-	private const TTL           = 12 * HOUR_IN_SECONDS;
+        /* Transient */
+        public const TRANSIENT_KEY = 'wpsc_gtm_settings';
+        private const TTL          = 12 * HOUR_IN_SECONDS;
 
 	/**
 	 * Retourne les réglages (cachés 12 h).
