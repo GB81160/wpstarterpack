@@ -1,7 +1,7 @@
 # WPSoluces Core (MU-Plugin)
 ## Installation
 
-1. **Copiez** le dossier `wpsoluces-core/` entier ainsi que `wp-soluces-core.php` dans :  
+1. **Copiez** le dossier `wpsoluces-core/` entier ainsi que `wpsoluces-core.php` dans :
 ```
 
 wp-content/mu-plugins/
