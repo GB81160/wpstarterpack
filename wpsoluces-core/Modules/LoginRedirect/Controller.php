@@ -5,9 +5,9 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Module LoginRedirect
- * — Déplace la page de connexion vers /connect
+ * — Déplace la page de connexion vers un slug personnalisé
  * — Bloque /wp-login.php et /wp-admin* pour les visiteurs
- * — Autorise le POST /connect et la redirection transitoire
+ * — Autorise le POST vers ce slug et la redirection transitoire
  * — Redirige l’utilisateur connecté vers /wp-admin/
  * — Flush + logout lors de l’activation/désactivation
  */
@@ -21,14 +21,19 @@ class Controller {
 	public static function register(): void {
 
 		/* ADMIN */
-		add_action( 'admin_menu',            [ self::class, 'add_settings_page' ] );
-		add_action( 'admin_init',            [ self::class, 'register_settings' ] );
-		add_action( 'admin_enqueue_scripts', [ self::class, 'enqueue_admin_css' ] );
-		add_action(
-			'update_option_' . Model::OPTION_ACTIVE,
-			[ self::class, 'flush_and_logout' ],
-			20, 2
-		);
+                add_action( 'admin_menu',            [ self::class, 'add_settings_page' ] );
+                add_action( 'admin_init',            [ self::class, 'register_settings' ] );
+                add_action( 'admin_enqueue_scripts', [ self::class, 'enqueue_admin_css' ] );
+                add_action(
+                        'update_option_' . Model::OPTION_ACTIVE,
+                        [ self::class, 'flush_and_logout' ],
+                        20, 2
+                );
+                add_action(
+                        'update_option_' . Model::OPTION_SLUG,
+                        [ self::class, 'flush_and_logout' ],
+                        20, 2
+                );
 
 		/* FRONT / GLOBAL */
 		add_action( 'init',          [ self::class, 'add_rewrite' ] );
@@ -52,35 +57,57 @@ class Controller {
 		);
 	}
 
-	public static function register_settings(): void {
-		register_setting(
-			'wpsc_lr_group',
-			Model::OPTION_ACTIVE,
-			[
-				'type'              => 'boolean',
-				'sanitize_callback' => fn( $v ) => $v ? 1 : 0,
-				'default'           => 0,
-			]
-		);
+        public static function register_settings(): void {
+                register_setting(
+                        'wpsc_lr_group',
+                        Model::OPTION_ACTIVE,
+                        [
+                                'type'              => 'boolean',
+                                'sanitize_callback' => fn( $v ) => $v ? 1 : 0,
+                                'default'           => 0,
+                        ]
+                );
 
-		add_settings_section(
-			'wpsc_lr_section',
-			__( 'Déplacement de la page de connexion', 'wpsoluces' ),
-			fn() => printf(
-				'<p>%s</p>',
-				esc_html__( 'Les visiteurs verront 404 sur /wp-login.php et /wp-admin. Nouvelle URL : /connect', 'wpsoluces' )
-			),
-			'wpsc-lr'
-		);
+                register_setting(
+                        'wpsc_lr_group',
+                        Model::OPTION_SLUG,
+                        [
+                                'type'              => 'string',
+                                'sanitize_callback' => 'sanitize_title',
+                                'default'           => 'connect',
+                        ]
+                );
 
-		add_settings_field(
-			'wpsc_lr_active',
-			__( 'Activer', 'wpsoluces' ),
-			[ self::class, 'render_checkbox_field' ],
-			'wpsc-lr',
-			'wpsc_lr_section'
-		);
-	}
+
+                add_settings_section(
+                        'wpsc_lr_section',
+                        __( 'Déplacement de la page de connexion', 'wpsoluces' ),
+                        function () {
+                                printf(
+                                        '<p>%s</p>',
+                                        esc_html__( 'Les visiteurs verront 404 sur /wp-login.php et /wp-admin. Nouvelle URL personnalisable ci-dessous.', 'wpsoluces' )
+                                );
+                        },
+                        'wpsc-lr'
+                );
+
+                add_settings_field(
+                        'wpsc_lr_active',
+                        __( 'Activer', 'wpsoluces' ),
+                        [ self::class, 'render_checkbox_field' ],
+                        'wpsc-lr',
+                        'wpsc_lr_section'
+                );
+
+                add_settings_field(
+                        'wpsc_lr_slug',
+                        __( 'Slug de connexion', 'wpsoluces' ),
+                        [ View::class, 'slug_field' ],
+                        'wpsc-lr',
+                        'wpsc_lr_section'
+                );
+
+        }
 
 	public static function render_settings_page(): void { View::render_page(); }
 	public static function render_checkbox_field(): void { View::checkbox_field(); }
@@ -97,7 +124,8 @@ class Controller {
 	public static function add_rewrite(): void {
 		if ( ! Model::is_active() ) { return; }
 
-		add_rewrite_rule( '^connect/?$', 'wp-login.php', 'top' );
+                $slug = Model::slug();
+                add_rewrite_rule( '^' . preg_quote( $slug, '#' ) . '/?$', 'wp-login.php', 'top' );
 
                 if ( ! get_option( Model::OPTION_FLUSHED ) ) {
                         flush_rewrite_rules( false );
@@ -105,13 +133,14 @@ class Controller {
                 }
 	}
 
-	public static function block_default_endpoints(): void {
+        public static function block_default_endpoints(): void {
 
-		if ( ! Model::is_active() || is_user_logged_in() ) {
-			return;
-		}
+                if ( ! Model::is_active() || is_user_logged_in() ) {
+                        return;
+                }
 
-		$path = trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
+
+                $path = trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
 
 		// /wp-login.php
 		if ( preg_match( '#^wp-login\\.php$#i', $path ) ) {
@@ -132,7 +161,7 @@ class Controller {
 	}
 
 	public static function filter_login_url( string $login, string $redirect, bool $force_reauth ): string {
-		return Model::is_active() ? home_url( '/connect' ) : $login;
+                return Model::is_active() ? home_url( '/' . Model::slug() ) : $login;
 	}
 
 	/**
@@ -151,8 +180,8 @@ class Controller {
 
 		$is_login_post_ctx = $context === 'login_post' || $context === null;
 
-		if ( $is_login_post_ctx && $path === 'wp-login.php' ) {
-			return home_url( '/connect', $scheme ?: 'login' );
+                if ( $is_login_post_ctx && $path === 'wp-login.php' ) {
+                        return home_url( '/' . Model::slug(), $scheme ?: 'login' );
 		}
 
 		return $url;
@@ -167,7 +196,7 @@ class Controller {
 		if (
 			empty( $redirect_to )
 			|| strpos( $redirect_to, 'wp-login.php' ) !== false
-			|| strpos( $redirect_to, '/connect' ) !== false
+                        || strpos( $redirect_to, '/' . Model::slug() ) !== false
 		) {
 			return admin_url();
 		}
@@ -181,8 +210,8 @@ class Controller {
 			return;
 		}
 
-		$req     = trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
-		$connect = trim( wp_make_link_relative( home_url( '/connect' ) ), '/' );
+                $req     = trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
+                $connect = trim( wp_make_link_relative( home_url( '/' . Model::slug() ) ), '/' );
 
 		if ( $req === $connect ) {
 			global $error, $user_login;
@@ -202,9 +231,9 @@ class Controller {
 
 		wp_logout();
 
-		wp_safe_redirect( $new ? home_url( '/connect' ) : wp_login_url() );
-		exit;
-	}
+                wp_safe_redirect( $new ? home_url( '/' . Model::slug() ) : wp_login_url() );
+                exit;
+        }
 
 	/* ---------------------------------------------------------------------
 	 * Helper 404
