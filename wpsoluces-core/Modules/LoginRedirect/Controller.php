@@ -92,7 +92,7 @@ class Controller {
                add_settings_section(
                        'wpsc_lr_section',
                        __( 'Déplacement de la page de connexion', 'wpsoluces' ),
-                       [ View::class, 'section_description' ],
+                       '__return_null',
                        'wpsc-lr'
                );
 

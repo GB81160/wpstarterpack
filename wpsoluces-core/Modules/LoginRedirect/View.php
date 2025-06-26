@@ -23,16 +23,6 @@ class View {
         );
     }
 
-    /**
-     * Description de la section réglages.
-     */
-    public static function section_description(): void {
-        printf(
-            '<p>%s %s</p>',
-            self::get_notice_message(),
-            esc_html__( 'Nouvelle URL personnalisable ci-dessous.', 'wpsoluces' )
-        );
-    }
 
     /**
      * Page complète
