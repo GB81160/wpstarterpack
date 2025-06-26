@@ -66,7 +66,44 @@ class Controller {
                 'sanitize_callback' => [ self::class, 'sanitize_gtm_id' ],
                 'default'           => '',
             ]
-@@ -124,57 +124,65 @@ class Controller {
+        );
+
+        register_setting(
+            'wpsc_gtm_group',
+            Model::OPTION_KEY_ACTIVE,
+            [
+                'type'              => 'boolean',
+                'sanitize_callback' => fn ( $v ) => $v ? 1 : 0,
+                'default'           => 0,
+            ]
+        );
+
+        add_settings_section(
+            'wpsc_gtm_section',
+            'Google Tag Manager',
+            '__return_null',
+            'wpsc-gtm'
+        );
+
+        add_settings_field(
+            'wpsc_gtm_id',
+            'ID',
+            [ View::class, 'input_field' ],
+            'wpsc-gtm',
+            'wpsc_gtm_section'
+        );
+
+        add_settings_field(
+            'wpsc_gtm_active',
+            __( 'Activer', 'wpsoluces' ),
+            [ View::class, 'checkbox_field' ],
+            'wpsc-gtm',
+            'wpsc_gtm_section'
+        );
+    }
+
+    private static function sanitize_gtm_id( string $id ): string {
+        return strtoupper( trim( $id ) );
     }
 
     public static function render_settings_page(): void { View::render_page(); }
