@@ -81,12 +81,12 @@ class Controller {
                 register_setting(
                         'wpsc_lr_group',
                         Model::OPTION_SLUG,
-                        [
+                       [
                                 'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_title',
-                                'default'           => 'connect',
+                                'default'           => Model::DEFAULT_SLUG,
                         ]
-                );
+               );
 
 
                 add_settings_section(
