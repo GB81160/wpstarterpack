@@ -118,11 +118,18 @@ class Controller {
 		}
 	}
 
-	/* ---------------------------------------------------------------------
-	 * FRONT / GLOBAL
-	 * ------------------------------------------------------------------ */
-	public static function add_rewrite(): void {
-		if ( ! Model::is_active() ) { return; }
+        /* ---------------------------------------------------------------------
+         * FRONT / GLOBAL
+         * ------------------------------------------------------------------ */
+       /**
+        * Renvoie le chemin de requête courant (/sans domaine).
+        */
+       private static function request_path(): string {
+               return trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
+       }
+
+       public static function add_rewrite(): void {
+               if ( ! Model::is_active() ) { return; }
 
                 $slug = Model::slug();
                 add_rewrite_rule( '^' . preg_quote( $slug, '#' ) . '/?$', 'wp-login.php', 'top' );
@@ -140,7 +147,7 @@ class Controller {
                 }
 
 
-                $path = trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
+               $path = self::request_path();
 
 		// /wp-login.php
 		if ( preg_match( '#^wp-login\\.php$#i', $path ) ) {
@@ -210,7 +217,7 @@ class Controller {
 			return;
 		}
 
-                $req     = trim( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) ?? '', '/' );
+               $req     = self::request_path();
                 $connect = trim( wp_make_link_relative( home_url( '/' . Model::slug() ) ), '/' );
 
 		if ( $req === $connect ) {
@@ -225,15 +232,19 @@ class Controller {
 	/* ---------------------------------------------------------------------
 	 * Flush + logout lors activation/désactivation
 	 * ------------------------------------------------------------------ */
-        public static function flush_and_logout( $old, $new ): void {
-                flush_rewrite_rules( false );
-                delete_option( Model::OPTION_FLUSHED );
+       public static function flush_and_logout( $old, $new ): void {
+               flush_rewrite_rules( false );
+               delete_option( Model::OPTION_FLUSHED );
 
-		wp_logout();
+               wp_logout();
 
-                wp_safe_redirect( $new ? home_url( '/' . Model::slug() ) : wp_login_url() );
-                exit;
-        }
+               $target = Model::is_active()
+                       ? home_url( '/' . Model::slug() )
+                       : wp_login_url();
+
+               wp_safe_redirect( $target );
+               exit;
+       }
 
 	/* ---------------------------------------------------------------------
 	 * Helper 404
