@@ -27,10 +27,17 @@ class Model {
 			return $cached;
 		}
 
-		$settings = [
-			'id'     => get_option( self::OPTION_KEY_ID, '' ),
-			'active' => (bool) get_option( self::OPTION_KEY_ACTIVE, 0 ),
-		];
+                $settings = [
+                        'id'     => get_option( self::OPTION_KEY_ID, '' ),
+                        'active' => (bool) get_option( self::OPTION_KEY_ACTIVE, 0 ),
+                ];
+
+                /**
+                 * Filter to override settings programmatically (e.g. multisite).
+                 *
+                 * @param array{id:string,active:bool} $settings
+                 */
+                $settings = apply_filters( 'wpsc_gtm_settings', $settings );
 
 		set_transient( self::TRANSIENT_KEY, $settings, self::TTL );
 		return $settings;

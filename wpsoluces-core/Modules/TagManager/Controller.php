@@ -38,8 +38,8 @@ class Controller {
         );
 
         /* FRONT */
-        add_action( 'wp_head',      [ self::class, 'print_head_snippet' ], 1 );
-        add_action( 'wp_body_open', [ self::class, 'print_body_noscript' ] );
+        add_action( 'wp_enqueue_scripts', [ self::class, 'enqueue_gtm_script' ], 1 );
+        add_action( 'wp_body_open',      [ self::class, 'print_body_noscript' ] );
     }
 
     /* ---------------------------------------------------------------------
@@ -146,31 +146,23 @@ class Controller {
     }
 
     /* ---------------------------------------------------------------------
-     * FRONT · Head + Body
+     * FRONT · enqueue script + Body noscript
      * ------------------------------------------------------------------ */
-    public static function print_head_snippet(): void {
+    public static function enqueue_gtm_script(): void {
         if ( ! $s = self::settings() ) { return; }
 
-        printf(
-            "\n<!-- Google Tag Manager -->\n"
-          . "<script>\n"
-          . "    document.addEventListener('DOMContentLoaded', function () {\n"
-          . "        (function (w, d, s, l, i) {\n"
-          . "            w[l] = w[l] || [];\n"
-          . "            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });\n"
-          . "            var f = d.getElementsByTagName(s)[0];\n"
-          . "            var j = d.createElement(s);\n"
-          . "            var dl = l !== 'dataLayer' ? '&l=' + l : '';\n"
-          . "            j.async = true;\n"
-          . "            j.defer = true;\n"
-          . "            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;\n"
-          . "            f.parentNode.insertBefore(j, f);\n"
-          . "        })(window, document, 'script', 'dataLayer', '%s');\n"
-          . "    });\n"
-          . "</script>\n"
-          . "<!-- End Google Tag Manager -->\n",
-            esc_js( $s['id'] )
-        );
+        $src = sprintf( 'https://www.googletagmanager.com/gtm.js?id=%s', rawurlencode( $s['id'] ) );
+        wp_enqueue_script( 'wpsc-gtm', $src, [], null, false );
+
+        add_filter( 'script_loader_tag', [ self::class, 'add_async_defer' ], 10, 2 );
+    }
+
+    public static function add_async_defer( string $tag, string $handle ): string {
+        if ( $handle !== 'wpsc-gtm' ) {
+            return $tag;
+        }
+
+        return str_replace( '<script ', '<script async defer ', $tag );
     }
 
     public static function print_body_noscript(): void {
