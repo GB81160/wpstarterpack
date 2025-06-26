@@ -63,7 +63,8 @@ class View {
         /** Champ slug */
         public static function slug_field(): void {
                 printf(
-                        '<input type="text" name="%1$s" value="%2$s" class="regular-text" />',
+                        '<span class="wpsc-url-prefix">%s</span><input type="text" name="%s" value="%s" class="regular-text" placeholder="connect" />',
+                        esc_url( home_url( '/' ) ),
                         esc_attr( Model::OPTION_SLUG ),
                         esc_attr( Model::slug() )
                 );
