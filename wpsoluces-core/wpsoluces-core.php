@@ -3,6 +3,7 @@
  * Plugin Name:       WPSoluces Core
  * Description:       Fonctionnalités WordPress additionnelles : Config GTM, Changement URL WPadmin + Blocages tentatives connexion, Duplication pages & articles, XML-RPC Bloqué, Cacher version Wordpress.
  * Version:           1.0.0
+ * Text Domain:       wpsoluces
  * Author:            Guillaume BLANCO – WPSoluces
  * Author URI:        https://wpsoluces.com
  * License:           GPL v2 or later
