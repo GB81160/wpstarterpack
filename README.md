@@ -10,6 +10,7 @@ wp-content/plugins/
 
 ```
 2. Activez « WPSoluces Core » depuis l'administration WordPress.
+3. Ce plugin nécessite **PHP 8.2** ou supérieur.
 
 ---
 
