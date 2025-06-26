@@ -11,8 +11,20 @@
 
 
 if ( ! defined( 'ABSPATH' ) ) {
-	// Sécurité : bloque tout accès direct.
-	exit;
+    // Sécurité : bloque tout accès direct.
+    exit;
+}
+
+/* --------------------------------------------------------------------- */
+/* Compatibilité PHP                                                     */
+/* --------------------------------------------------------------------- */
+if ( version_compare( PHP_VERSION, '8.2', '<' ) ) {
+    add_action( 'admin_notices', function () {
+        echo '<div class="notice notice-error"><p>';
+        echo esc_html__( 'WPSoluces Core requires PHP 8.2 or higher.', 'wpsoluces' );
+        echo '</p></div>';
+    } );
+    return;
 }
 
 /* ------------------------------------------------------------------------- */
