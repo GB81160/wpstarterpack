@@ -36,6 +36,9 @@ class Controller {
 
         // 7. Pour les thèmes qui codent en dur le <link rel="pingback"> avant wp_head()
         add_action( 'template_redirect', [ __CLASS__, 'start_buffer' ], 1 );
+        add_action( 'shutdown',        [ __CLASS__, 'end_buffer' ],   0 );
+
+        add_action( 'admin_notices', [ __CLASS__, 'admin_notice' ] );
     }
 
     /**
@@ -83,6 +86,12 @@ class Controller {
         ob_start( [ __CLASS__, 'remove_pingback_link_from_buffer' ] );
     }
 
+    public static function end_buffer(): void {
+        if ( ob_get_level() > 0 ) {
+            echo self::remove_pingback_link_from_buffer( ob_get_clean() );
+        }
+    }
+
     /**
      * Callback d’ob_end_flush() : on retire la <link rel="pingback">.
      *
@@ -95,5 +104,9 @@ class Controller {
             '',
             $buffer
         );
+    }
+
+    public static function admin_notice(): void {
+        echo '<div class="notice notice-info"><p>' . esc_html__( 'XML-RPC est désactivé par WPSoluces Core.', 'wpsoluces' ) . '</p></div>';
     }
 }
