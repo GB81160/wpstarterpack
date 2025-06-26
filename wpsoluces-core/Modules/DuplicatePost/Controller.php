@@ -75,14 +75,15 @@ class Controller {
 			exit;
 		}
 
-		/* 1. Nouveau brouillon */
-		$new_id = wp_insert_post( [
-			'post_title'   => $orig->post_title . ' (copie)',
-			'post_content' => $orig->post_content,
-			'post_excerpt' => $orig->post_excerpt,
-			'post_status'  => 'draft',
-			'post_type'    => $orig->post_type,
-			'post_author'  => get_current_user_id(),
+                /* 1. Nouveau brouillon */
+                $suffix = apply_filters( 'wpsc_duplicate_title_suffix', ' (copie)' );
+                $new_id = wp_insert_post( [
+                        'post_title'   => $orig->post_title . $suffix,
+                        'post_content' => $orig->post_content,
+                        'post_excerpt' => $orig->post_excerpt,
+                        'post_status'  => 'draft',
+                        'post_type'    => $orig->post_type,
+                        'post_author'  => get_current_user_id(),
 			'post_parent'  => $orig->post_parent,
 			'menu_order'   => $orig->menu_order,
 			'comment_status' => $orig->comment_status,
@@ -99,12 +100,17 @@ class Controller {
 			wp_set_object_terms( $new_id, $terms, $taxonomy );
 		}
 
-		/* 3. Métadonnées */
-		foreach ( get_post_meta( $post_id ) as $key => $values ) {
-			foreach ( $values as $value ) {
-				add_post_meta( $new_id, $key, maybe_unserialize( $value ) );
-			}
-		}
+                /* 3. Métadonnées */
+                foreach ( get_post_meta( $post_id ) as $key => $values ) {
+                        foreach ( $values as $value ) {
+                                add_post_meta( $new_id, $key, maybe_unserialize( $value ) );
+                        }
+                }
+
+                /* Image mise en avant */
+                if ( $thumb = get_post_thumbnail_id( $post_id ) ) {
+                        set_post_thumbnail( $new_id, $thumb );
+                }
 
 		/* 4. Retour à la liste avec paramètre de confirmation */
 		$list_url = ( $orig->post_type === 'post' )
