@@ -5,13 +5,16 @@ defined( 'ABSPATH' ) || exit;
 
 class Model {
 
-    public const OPTION_MAX_ATTEMPTS = 'wpsc_ll_max';
-    public const OPTION_LOCK_MINUTES = 'wpsc_ll_lock';
+    /** Nombre maximal d'essais. */
+    private const MAX_ATTEMPTS = 5;
+
+    /** Durée de blocage en minutes. */
+    private const LOCK_MINUTES = 30;
+
     private const PREFIX = 'wpsc_ll_';
 
     private static function key( string $login ): string {
-        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-        return self::PREFIX . md5( strtolower( $login ) . '|' . $ip );
+        return self::PREFIX . md5( strtolower( $login ) );
     }
 
     public static function get_attempts( string $login ): int {
@@ -19,11 +22,11 @@ class Model {
     }
 
     public static function max_attempts(): int {
-        return (int) get_option( self::OPTION_MAX_ATTEMPTS, 5 );
+        return self::MAX_ATTEMPTS;
     }
 
     public static function lock_minutes(): int {
-        return (int) get_option( self::OPTION_LOCK_MINUTES, 30 );
+        return self::LOCK_MINUTES;
     }
 
     public static function increment( string $login ): void {
