@@ -1,7 +1,9 @@
 # WPSoluces Core (Plugin)
 ## Installation
 
+
 1. **Copiez** le dossier `wpsoluces-core/` dans :
+
 ```
 
 wp-content/plugins/
