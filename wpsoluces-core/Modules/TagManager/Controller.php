@@ -9,12 +9,11 @@ defined( 'ABSPATH' ) || exit;
 class Controller {
 
     private static ?string $page_hook = null;
-    private static string $gtm_id = '';
 
     /* ---------------------------------------------------------------------
      * HOOKS
      * ------------------------------------------------------------------ */
-   public static function register(): void {
+    public static function register(): void {
 
         /* ADMIN */
         add_action( 'admin_menu',            [ self::class, 'add_settings_page' ] );
@@ -80,14 +79,17 @@ class Controller {
 
         add_settings_section(
             'wpsc_gtm_section',
-            'Google Tag Manager',
-            '__return_null',
+            'Balise Google Tag Manager',
+            fn() => printf(
+                '<p>%s</p>',
+                esc_html__( 'Indiquez l’ID (GTM-XXXXXXX) puis cochez pour activer.', 'wpsoluces' )
+            ),
             'wpsc-gtm'
         );
 
         add_settings_field(
             'wpsc_gtm_id',
-            'ID',
+            'ID du conteneur',
             [ View::class, 'input_field' ],
             'wpsc-gtm',
             'wpsc_gtm_section'
@@ -95,15 +97,30 @@ class Controller {
 
         add_settings_field(
             'wpsc_gtm_active',
-            __( 'Activer', 'wpsoluces' ),
+            'Activer l’injection',
             [ View::class, 'checkbox_field' ],
             'wpsc-gtm',
             'wpsc_gtm_section'
         );
     }
 
-    private static function sanitize_gtm_id( string $id ): string {
-        return strtoupper( trim( $id ) );
+    /** Validation serveur stricte */
+    public static function sanitize_gtm_id( string $raw ): string {
+
+        $id     = strtoupper( trim( $raw ) );
+        $active = isset( $_POST[ Model::OPTION_KEY_ACTIVE ] ) ? (int) $_POST[ Model::OPTION_KEY_ACTIVE ] : 0;
+
+        if ( $active && ! preg_match( '/^GTM-[A-Z0-9]{7}$/', $id ) ) {
+            add_settings_error(
+                Model::OPTION_KEY_ID,
+                'gtm_invalid',
+                __( 'ID GTM invalide : format requis « GTM-XXXXXXX ».', 'wpsoluces' ),
+                'error'
+            );
+            return ''; // empêche l’enregistrement
+        }
+
+        return $id;
     }
 
     public static function render_settings_page(): void { View::render_page(); }
