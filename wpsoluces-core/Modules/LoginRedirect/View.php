@@ -59,6 +59,6 @@ class View {
      */
     public static function slug_field(): void {
         echo '<span class="wpsc-url-prefix">' . esc_url( home_url( '/' ) ) . '</span>';
-        echo '<input type="text" name="' . esc_attr( Model::OPTION_SLUG ) . '" value="' . esc_attr( Model::slug() ) . '" class="regular-text" placeholder="connect" />';
+        echo '<input type="text" name="' . esc_attr( Model::OPTION_SLUG ) . '" value="' . esc_attr( Model::slug() ) . '" class="regular-text" placeholder="' . esc_attr( Model::DEFAULT_SLUG ) . '" />';
     }
 }

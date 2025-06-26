@@ -81,12 +81,12 @@ class Controller {
                 register_setting(
                         'wpsc_lr_group',
                         Model::OPTION_SLUG,
-                        [
+                       [
                                 'type'              => 'string',
                                 'sanitize_callback' => 'sanitize_title',
-                                'default'           => 'connect',
+                                'default'           => Model::DEFAULT_SLUG,
                         ]
-                );
+               );
 
 
                 add_settings_section(
@@ -243,6 +243,10 @@ class Controller {
 	 * Flush + logout lors activation/désactivation
 	 * ------------------------------------------------------------------ */
        public static function flush_and_logout( $old, $new ): void {
+               if ( $old === $new ) {
+                       return;
+               }
+
                flush_rewrite_rules( false );
                delete_option( Model::OPTION_FLUSHED );
 
