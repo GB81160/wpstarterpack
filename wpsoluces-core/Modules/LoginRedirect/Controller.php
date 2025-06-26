@@ -89,17 +89,12 @@ class Controller {
                );
 
 
-                add_settings_section(
-                        'wpsc_lr_section',
-                        __( 'Déplacement de la page de connexion', 'wpsoluces' ),
-                        function () {
-                                printf(
-                                        '<p>%s</p>',
-                                        esc_html__( 'Les visiteurs verront 404 sur /wp-login.php et /wp-admin. Nouvelle URL personnalisable ci-dessous.', 'wpsoluces' )
-                                );
-                        },
-                        'wpsc-lr'
-                );
+               add_settings_section(
+                       'wpsc_lr_section',
+                       __( 'Déplacement de la page de connexion', 'wpsoluces' ),
+                       [ View::class, 'section_description' ],
+                       'wpsc-lr'
+               );
 
                 add_settings_field(
                         'wpsc_lr_active',
