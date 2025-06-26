@@ -18,11 +18,7 @@ class View {
         echo '<p class="notice notice-info" style="padding:12px 15px;">';
         printf(
             /* translators: %s = nouvelle URL de connexion */
-            esc_html__(
-                'Une fois la fonction activée, les pages %1$s et %2$s afficheront un code 404 pour les visiteurs. '
-                . 'La nouvelle adresse de connexion sera : %3$s',
-                'wpsoluces'
-            ),
+            esc_html__( 'Une fois la fonction activée, les pages %1$s et %2$s afficheront un code 404 pour les visiteurs. La nouvelle adresse de connexion sera : %3$s', 'wpsoluces' ),
             '<code>/wp-login.php</code>',
             '<code>/wp-admin</code>',
             '<code>' . esc_url( home_url( '/connect' ) ) . '</code>'
