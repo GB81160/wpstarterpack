@@ -30,7 +30,17 @@ class Controller {
                         20, 2
                 );
                 add_action(
+                        'add_option_' . Model::OPTION_ACTIVE,
+                        [ self::class, 'flush_and_logout' ],
+                        20, 2
+                );
+                add_action(
                         'update_option_' . Model::OPTION_SLUG,
+                        [ self::class, 'flush_and_logout' ],
+                        20, 2
+                );
+                add_action(
+                        'add_option_' . Model::OPTION_SLUG,
                         [ self::class, 'flush_and_logout' ],
                         20, 2
                 );
