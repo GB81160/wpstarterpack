@@ -66,68 +66,7 @@ class Controller {
                 'type'              => 'string',
                 'sanitize_callback' => [ self::class, 'sanitize_gtm_id' ],
                 'default'           => '',
-            ]
-        );
-
-        register_setting(
-            'wpsc_gtm_group',
-            Model::OPTION_KEY_ACTIVE,
-            [
-                'type'              => 'boolean',
-                'sanitize_callback' => fn ( $v ) => $v ? 1 : 0,
-                'default'           => 0,
-            ]
-        );
-
-        add_settings_section(
-            'wpsc_gtm_section',
-            'Balise Google Tag Manager',
-            fn() => printf(
-                '<p>%s</p>',
-                esc_html__( 'Indiquez l’ID (GTM-XXXXXXX) puis cochez pour activer.', 'wpsoluces' )
-            ),
-            'wpsc-gtm'
-        );
-
-        add_settings_field(
-            'wpsc_gtm_id',
-            'ID du conteneur',
-            [ View::class, 'input_field' ],
-            'wpsc-gtm',
-            'wpsc_gtm_section'
-        );
-
-        add_settings_field(
-            'wpsc_gtm_active',
-            'Activer l’injection',
-            [ View::class, 'checkbox_field' ],
-            'wpsc-gtm',
-            'wpsc_gtm_section'
-        );
-    }
-
-    /** Validation serveur stricte */
-    public static function sanitize_gtm_id( string $raw ): string {
-
-        $id     = strtoupper( trim( $raw ) );
-        $active = isset( $_POST[ Model::OPTION_KEY_ACTIVE ] ) ? (int) $_POST[ Model::OPTION_KEY_ACTIVE ] : 0;
-
-        if ( $active && ! preg_match( '/^GTM-[A-Z0-9]{7}$/', $id ) ) {
-            add_settings_error(
-                Model::OPTION_KEY_ID,
-                'gtm_invalid',
-                __( 'ID GTM invalide : format requis « GTM-XXXXXXX ».', 'wpsoluces' ),
-                'error'
-            );
-            return ''; // empêche l’enregistrement
-        }
-
-        return $id;
-    }
-
-    public static function render_settings_page(): void { View::render_page(); }
-
-    public static function enqueue_validator_js( string $hook ): void {
+@@ -129,52 +131,61 @@ class Controller {
         if ( $hook === self::$page_hook ) {
             wp_enqueue_script(
                 'wpsc-gtm-validator',
