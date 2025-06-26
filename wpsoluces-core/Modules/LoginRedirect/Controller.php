@@ -243,6 +243,10 @@ class Controller {
 	 * Flush + logout lors activation/désactivation
 	 * ------------------------------------------------------------------ */
        public static function flush_and_logout( $old, $new ): void {
+               if ( $old === $new ) {
+                       return;
+               }
+
                flush_rewrite_rules( false );
                delete_option( Model::OPTION_FLUSHED );
 
