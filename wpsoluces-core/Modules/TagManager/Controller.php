@@ -129,7 +129,7 @@ class Controller {
         if ( $hook === self::$page_hook ) {
             wp_enqueue_script(
                 'wpsc-gtm-validator',
-                WPSC_URL . '/Modules/assets/JS/gtm-settings.js',
+                WPSC_URL . '/Modules/TagManager/assets/JS/gtm-settings.js',
                 [],
                 '1.1.0',
                 true
