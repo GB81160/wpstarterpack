@@ -19,7 +19,6 @@ class View {
         printf(
             /* translators: %s = nouvelle URL de connexion */
             esc_html__(
-<<<<<<< ml29eg-codex/analyser-le-code-pour-erreurs-php
                 'Une fois la fonction activée, les pages %1$s et %2$s afficheront un code 404 pour les visiteurs.',
                 'wpsoluces'
             ),
@@ -32,14 +31,6 @@ class View {
         printf(
             esc_html__( 'Adresse de connexion actuelle : %s', 'wpsoluces' ),
             '<code>' . esc_url( home_url( '/' . Model::slug() ) ) . '</code>'
-=======
-                'Une fois la fonction activée, les pages %1$s et %2$s afficheront un code 404 pour les visiteurs. La nouvelle adresse de connexion sera : %3$s',
-                'wpsoluces'
-            ),
-            '<code>/wp-login.php</code>',
-            '<code>/wp-admin</code>',
-            '<code>' . esc_url( home_url( '/connect' ) ) . '</code>'
->>>>>>> dev
         );
         echo '</p>';
 
@@ -59,7 +50,6 @@ class View {
         echo '<input type="checkbox" name="' . esc_attr( Model::OPTION_ACTIVE ) . '" value="1" ';
         checked( Model::is_active() );
         echo '/> ';
-<<<<<<< ml29eg-codex/analyser-le-code-pour-erreurs-php
         esc_html_e( 'Activer le déplacement de la connexion', 'wpsoluces' );
         echo '</label>';
     }
@@ -71,9 +61,4 @@ class View {
         echo '<span class="wpsc-url-prefix">' . esc_url( home_url( '/' ) ) . '</span>';
         echo '<input type="text" name="' . esc_attr( Model::OPTION_SLUG ) . '" value="' . esc_attr( Model::slug() ) . '" class="regular-text" placeholder="connect" />';
     }
-=======
-        esc_html_e( 'Activer le déplacement de la connexion vers /connect', 'wpsoluces' );
-        echo '</label>';
-    }
->>>>>>> dev
 }
