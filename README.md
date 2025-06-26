@@ -1,13 +1,15 @@
-# WPSoluces Core (MU-Plugin)
+# WPSoluces Core (Plugin)
 ## Installation
 
-1. **Copiez** le dossier `wpsoluces-core/` entier ainsi que `wpsoluces-core.php` dans :
-```
 
-wp-content/mu-plugins/
+1. **Copiez** le dossier `wpsoluces-core/` dans :
 
 ```
-2. Vérifiez que le fichier principal `mu-plugins/wpsoluces-core.php` est bien chargé automatiquement par WordPress (les MU-Plugins sont activés par défaut).
+
+wp-content/plugins/
+
+```
+2. Activez « WPSoluces Core » depuis l'administration WordPress.
 
 ---
 
@@ -26,15 +28,6 @@ Chaque module est démarré automatiquement par `Core\Init::run()` :
 | **DisableXmlRpc**            | Désactive complètement XML-RPC, les pingbacks/RSD/WLW, et bloque toute requête directe vers `xmlrpc.php`.         |
 
 ---
-
-## Pourquoi MU-Plugin ?
-
-- **Chargement automatique** : pas besoin d’activer manuellement.
-- **Sécurité renforcée** : modules critiques toujours en place.
-- **Centralisation** : tous vos réglages “core” dans un seul dossier.
-
----
-
 ## Support et contributions
 
 Pour toute suggestion ou bug, ouvrez une issue sur le dépôt Git ou contactez Guillaume de WPSoluces.
