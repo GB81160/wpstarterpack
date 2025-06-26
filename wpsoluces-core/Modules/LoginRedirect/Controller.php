@@ -99,10 +99,10 @@ class Controller {
 
 		add_rewrite_rule( '^connect/?$', 'wp-login.php', 'top' );
 
-		if ( ! get_option( 'wpsc_lr_rewrite_flushed' ) ) {
-			flush_rewrite_rules( false );
-			update_option( 'wpsc_lr_rewrite_flushed', 1 );
-		}
+                if ( ! get_option( Model::OPTION_FLUSHED ) ) {
+                        flush_rewrite_rules( false );
+                        update_option( Model::OPTION_FLUSHED, 1 );
+                }
 	}
 
 	public static function block_default_endpoints(): void {
@@ -196,9 +196,9 @@ class Controller {
 	/* ---------------------------------------------------------------------
 	 * Flush + logout lors activation/désactivation
 	 * ------------------------------------------------------------------ */
-	public static function flush_and_logout( $old, $new ): void {
-		flush_rewrite_rules( false );
-		delete_option( 'wpsc_lr_rewrite_flushed' );
+        public static function flush_and_logout( $old, $new ): void {
+                flush_rewrite_rules( false );
+                delete_option( Model::OPTION_FLUSHED );
 
 		wp_logout();
 
