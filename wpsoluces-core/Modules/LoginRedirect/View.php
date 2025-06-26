@@ -9,15 +9,11 @@ defined( 'ABSPATH' ) || exit;
 class View {
 
     /**
-     * Page complète
+     * Texte commun de la notice.
      */
-    public static function render_page(): void {
-        echo '<div class="wrap">';
-        echo '<h1>' . esc_html__( 'URL de connexion', 'wpsoluces' ) . '</h1>';
-
-        echo '<p class="notice notice-info" style="padding:12px 15px;">';
-        printf(
-            /* translators: %s = nouvelle URL de connexion */
+    private static function get_notice_message(): string {
+        return sprintf(
+            /* translators: 1: /wp-login.php, 2: /wp-admin */
             esc_html__(
                 'Une fois la fonction activée, les pages %1$s et %2$s afficheront un code 404 pour les visiteurs.',
                 'wpsoluces'
@@ -25,6 +21,18 @@ class View {
             '<code>/wp-login.php</code>',
             '<code>/wp-admin</code>'
         );
+    }
+
+
+    /**
+     * Page complète
+     */
+    public static function render_page(): void {
+        echo '<div class="wrap">';
+        echo '<h1>' . esc_html__( 'URL de connexion', 'wpsoluces' ) . '</h1>';
+
+        echo '<p class="notice notice-info" style="padding:12px 15px;">';
+        echo self::get_notice_message();
         echo '</p>';
 
         echo '<p>';
