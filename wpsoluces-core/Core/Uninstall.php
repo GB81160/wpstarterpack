@@ -12,6 +12,22 @@ class Uninstall {
     public static function run(): void {
         global $wpdb;
 
+        // Autoload plugin classes if the plugin was not fully bootstrapped.
+        spl_autoload_register( function ( $class ) {
+            $prefix = 'WPSolucesCore\\';
+            if ( str_starts_with( $class, $prefix ) === false ) {
+                return;
+            }
+
+            $base_dir = WPSC_PATH . '/';
+            $relative_class = substr( $class, strlen( $prefix ) );
+            $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+
+            if ( file_exists( $file ) ) {
+                require $file;
+            }
+        } );
+
         // Options enregistrées par les modules
         $options = [
             LoginRedirect::OPTION_ACTIVE,
