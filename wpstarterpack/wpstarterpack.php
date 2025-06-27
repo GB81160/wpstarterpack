@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name:       WPSoluces Core
+ * Plugin Name:       WP Starter Pack
  * Description:       Fonctionnalités WordPress additionnelles : Config GTM, Changement URL WPadmin + Blocages tentatives connexion, Duplication pages & articles, XML-RPC Bloqué, Cacher version Wordpress.
  * Version:           1.0.0
- * Text Domain:       wpsoluces
+ * Text Domain:       wpstarterpack
  * Author:            Guillaume BLANCO – WPSoluces
  * Author URI:        https://wpsoluces.com
  * License:           GPL v2 or later
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( version_compare( PHP_VERSION, '8.2', '<' ) ) {
     add_action( 'admin_notices', function () {
         echo '<div class="notice notice-error"><p>';
-        echo esc_html__( 'WPSoluces Core requires PHP 8.2 or higher.', 'wpsoluces' );
+        echo esc_html__( 'WP Starter Pack requires PHP 8.2 or higher.', 'wpstarterpack' );
         echo '</p></div>';
     } );
     return;
@@ -32,44 +32,44 @@ if ( version_compare( PHP_VERSION, '8.2', '<' ) ) {
 /* ------------------------------------------------------------------------- */
 /* Chemins utiles                                                            */
 /* ------------------------------------------------------------------------- */
-define( 'WPSC_PATH', __DIR__ );
-define( 'WPSC_URL',  plugin_dir_url( __FILE__ ) );
+define( 'WPSP_PATH', __DIR__ );
+define( 'WPSP_URL',  plugin_dir_url( __FILE__ ) );
 
 /* ------------------------------------------------------------------------- */
 /* Amorçage                                                                  */
 /* ------------------------------------------------------------------------- */
-require_once WPSC_PATH . '/Core/Init.php';
-require_once WPSC_PATH . '/Core/Uninstall.php';
+require_once WPSP_PATH . '/Core/Init.php';
+require_once WPSP_PATH . '/Core/Uninstall.php';
 
 /**
  * Initialise tous les modules une fois les plugins chargés.
  */
-function wpsc_core_boot(): void {
-    \WPSolucesCore\Core\Init::run();
+function wpsp_boot(): void {
+    \WPStarterPack\Core\Init::run();
 }
-add_action( 'plugins_loaded', 'wpsc_core_boot' );
+add_action( 'plugins_loaded', 'wpsp_boot' );
 
 /**
  * Activation du plugin : enregistre les règles de réécriture.
  */
-function wpsc_core_activate(): void {
-    wpsc_core_boot();
+function wpsp_activate(): void {
+    wpsp_boot();
     flush_rewrite_rules( false );
 }
-register_activation_hook( __FILE__, 'wpsc_core_activate' );
+register_activation_hook( __FILE__, 'wpsp_activate' );
 
 /**
  * Désactivation du plugin : purge les réécritures.
  */
-function wpsc_core_deactivate(): void {
+function wpsp_deactivate(): void {
     flush_rewrite_rules( false );
 }
-register_deactivation_hook( __FILE__, 'wpsc_core_deactivate' );
+register_deactivation_hook( __FILE__, 'wpsp_deactivate' );
 
 /**
  * Nettoyage complet lors de la désinstallation du plugin.
  */
-function wpsc_core_uninstall(): void {
-    \WPSolucesCore\Core\Uninstall::run();
+function wpsp_uninstall(): void {
+    \WPStarterPack\Core\Uninstall::run();
 }
-register_uninstall_hook( __FILE__, 'wpsc_core_uninstall' );
+register_uninstall_hook( __FILE__, 'wpsp_uninstall' );

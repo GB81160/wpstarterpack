@@ -1,9 +1,9 @@
 <?php
-namespace WPSolucesCore\Core;
+namespace WPStarterPack\Core;
 
-use WPSolucesCore\Modules\TagManager\Model as TagManager;
-use WPSolucesCore\Modules\LoginLimiter\Model as LoginLimiter;
-use WPSolucesCore\Modules\LoginRedirect\Model as LoginRedirect;
+use WPStarterPack\Modules\TagManager\Model as TagManager;
+use WPStarterPack\Modules\LoginLimiter\Model as LoginLimiter;
+use WPStarterPack\Modules\LoginRedirect\Model as LoginRedirect;
 
 /**
  * Centralise la désinstallation du plugin.
@@ -14,12 +14,12 @@ class Uninstall {
 
         // Autoload plugin classes if the plugin was not fully bootstrapped.
         spl_autoload_register( function ( $class ) {
-            $prefix = 'WPSolucesCore\\';
+            $prefix = 'WPStarterPack\\';
             if ( str_starts_with( $class, $prefix ) === false ) {
                 return;
             }
 
-            $base_dir = WPSC_PATH . '/';
+            $base_dir = WPSP_PATH . '/';
             $relative_class = substr( $class, strlen( $prefix ) );
             $file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
 
@@ -48,7 +48,7 @@ class Uninstall {
 
         // Tous les transients du LoginLimiter
         if ( $wpdb instanceof \wpdb ) {
-            $prefix = 'wpsc_ll_';
+            $prefix = 'wpsp_ll_';
             $like   = $wpdb->esc_like( $prefix );
             $names  = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_{$like}%' OR option_name LIKE '_transient_timeout_{$like}%'" );
             foreach ( $names as $name ) {

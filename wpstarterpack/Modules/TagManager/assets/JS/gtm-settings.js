@@ -7,8 +7,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const idField   = document.querySelector('#wpsc_gtm_id');
-  const activeBox = document.querySelector('#wpsc_gtm_active');
+  const idField   = document.querySelector('#wpsp_gtm_id');
+  const activeBox = document.querySelector('#wpsp_gtm_active');
   const form      = idField?.closest('form');
 
   if (!idField || !activeBox || !form) { return; }

@@ -1,15 +1,15 @@
-# WPSoluces Core (Plugin)
+# WP Starter Pack (Plugin)
 ## Installation
 
 
-1. **Téléversez le plugin.zip** ou **Copiez** le dossier `wpsoluces-core/` dans :
+1. **Téléversez le plugin.zip** ou **Copiez** le dossier `wpstarterpack/` dans :
 
 ```
 
 wp-content/plugins/
 
 ```
-2. Activez « WPSoluces Core » depuis l'administration WordPress.
+2. Activez « WP Starter Pack » depuis l'administration WordPress.
 3. Ce plugin nécessite **PHP 8.2** ou supérieur.
 
 ---
