@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\TagManager;
+namespace WPStarterPack\Modules\TagManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,7 +50,7 @@ class Controller {
             'Google Tag Manager',
             'Google Tag Manager',
             'manage_options',
-            'wpsc-gtm',
+            'wpsp-gtm',
             [ self::class, 'render_settings_page' ]
         );
     }
@@ -58,7 +58,7 @@ class Controller {
     public static function register_settings(): void {
 
         register_setting(
-            'wpsc_gtm_group',
+            'wpsp_gtm_group',
             Model::OPTION_KEY_ID,
             [
                 'type'              => 'string',
@@ -68,7 +68,7 @@ class Controller {
         );
 
         register_setting(
-            'wpsc_gtm_group',
+            'wpsp_gtm_group',
             Model::OPTION_KEY_ACTIVE,
             [
                 'type'              => 'boolean',
@@ -78,29 +78,29 @@ class Controller {
         );
 
         add_settings_section(
-            'wpsc_gtm_section',
+            'wpsp_gtm_section',
             'Balise Google Tag Manager',
             fn() => printf(
                 '<p>%s</p>',
-                esc_html__( 'Indiquez l’ID (GTM-XXXXXXX) puis cochez pour activer.', 'wpsoluces' )
+                esc_html__( 'Indiquez l’ID (GTM-XXXXXXX) puis cochez pour activer.', 'wpstarterpack' )
             ),
-            'wpsc-gtm'
+            'wpsp-gtm'
         );
 
         add_settings_field(
-            'wpsc_gtm_id',
+            'wpsp_gtm_id',
             'ID du conteneur',
             [ View::class, 'input_field' ],
-            'wpsc-gtm',
-            'wpsc_gtm_section'
+            'wpsp-gtm',
+            'wpsp_gtm_section'
         );
 
         add_settings_field(
-            'wpsc_gtm_active',
+            'wpsp_gtm_active',
             'Activer l’injection',
             [ View::class, 'checkbox_field' ],
-            'wpsc-gtm',
-            'wpsc_gtm_section'
+            'wpsp-gtm',
+            'wpsp_gtm_section'
         );
     }
 
@@ -114,7 +114,7 @@ class Controller {
             add_settings_error(
                 Model::OPTION_KEY_ID,
                 'gtm_invalid',
-                __( 'ID GTM invalide : format requis « GTM-XXXXXXX ».', 'wpsoluces' ),
+                __( 'ID GTM invalide : format requis « GTM-XXXXXXX ».', 'wpstarterpack' ),
                 'error'
             );
             return ''; // empêche l’enregistrement
@@ -128,8 +128,8 @@ class Controller {
     public static function enqueue_validator_js( string $hook ): void {
         if ( $hook === self::$page_hook ) {
             wp_enqueue_script(
-                'wpsc-gtm-validator',
-                WPSC_URL . '/Modules/TagManager/assets/JS/gtm-settings.js',
+                'wpsp-gtm-validator',
+                WPSP_URL . '/Modules/TagManager/assets/JS/gtm-settings.js',
                 [],
                 '1.1.0',
                 true

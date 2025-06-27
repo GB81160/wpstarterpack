@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\HideVersion;
+namespace WPStarterPack\Modules\HideVersion;
 
 defined( 'ABSPATH' ) || exit;
 

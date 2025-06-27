@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\TagManager;
+namespace WPStarterPack\Modules\TagManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -9,11 +9,11 @@ defined( 'ABSPATH' ) || exit;
 class Model {
 
 	/* Options WP */
-	public const OPTION_KEY_ID     = 'wpsc_gtm_id';
-	public const OPTION_KEY_ACTIVE = 'wpsc_gtm_active';
+	public const OPTION_KEY_ID     = 'wpsp_gtm_id';
+	public const OPTION_KEY_ACTIVE = 'wpsp_gtm_active';
 
         /* Transient */
-        public const TRANSIENT_KEY = 'wpsc_gtm_settings';
+        public const TRANSIENT_KEY = 'wpsp_gtm_settings';
         private const TTL          = 12 * HOUR_IN_SECONDS;
 
 	/**
@@ -37,7 +37,7 @@ class Model {
                  *
                  * @param array{id:string,active:bool} $settings
                  */
-                $settings = apply_filters( 'wpsc_gtm_settings', $settings );
+                $settings = apply_filters( 'wpsp_gtm_settings', $settings );
 
 		set_transient( self::TRANSIENT_KEY, $settings, self::TTL );
 		return $settings;

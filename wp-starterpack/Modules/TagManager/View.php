@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\TagManager;
+namespace WPStarterPack\Modules\TagManager;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -8,12 +8,12 @@ class View {
     /** Page complète */
     public static function render_page(): void { ?>
         <div class="wrap">
-            <h1><?php esc_html_e( 'Google Tag Manager', 'wpsoluces' ); ?></h1>
+            <h1><?php esc_html_e( 'Google Tag Manager', 'wpstarterpack' ); ?></h1>
             <form method="post" action="options.php">
                 <?php
-                    settings_fields( 'wpsc_gtm_group' );
-                    do_settings_sections( 'wpsc-gtm' );
-                    submit_button( __( 'Enregistrer les modifications', 'wpsoluces' ) );
+                    settings_fields( 'wpsp_gtm_group' );
+                    do_settings_sections( 'wpsp-gtm' );
+                    submit_button( __( 'Enregistrer les modifications', 'wpstarterpack' ) );
                 ?>
             </form>
         </div>
@@ -35,7 +35,7 @@ class View {
             '<label><input type="checkbox" id="%1$s" name="%1$s" value="1" %2$s /> %3$s</label>',
             esc_attr( Model::OPTION_KEY_ACTIVE ),
             checked( 1, $checked, false ),
-            esc_html__( 'Activer l’injection du script', 'wpsoluces' )
+            esc_html__( 'Activer l’injection du script', 'wpstarterpack' )
         );
     }
 }

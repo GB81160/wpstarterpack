@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\LoginLimiter;
+namespace WPStarterPack\Modules\LoginLimiter;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -11,7 +11,7 @@ class Model {
     /** Durée de blocage en minutes. */
     private const LOCK_MINUTES = 30;
 
-    private const PREFIX = 'wpsc_ll_';
+    private const PREFIX = 'wpsp_ll_';
 
     private static function key( string $login ): string {
         return self::PREFIX . md5( strtolower( $login ) );
