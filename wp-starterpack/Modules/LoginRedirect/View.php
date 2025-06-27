@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\LoginRedirect;
+namespace WPStarterPack\Modules\LoginRedirect;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,7 +16,7 @@ class View {
             /* translators: 1: /wp-login.php, 2: /wp-admin */
             esc_html__(
                 'Une fois la fonction activée, les pages %1$s et %2$s afficheront un code 404 pour les visiteurs.',
-                'wpsoluces'
+                'wpstarterpack'
             ),
             '<code>/wp-login.php</code>',
             '<code>/wp-admin</code>'
@@ -29,7 +29,7 @@ class View {
      */
     public static function render_page(): void {
         echo '<div class="wrap">';
-        echo '<h1>' . esc_html__( 'URL de connexion', 'wpsoluces' ) . '</h1>';
+        echo '<h1>' . esc_html__( 'URL de connexion', 'wpstarterpack' ) . '</h1>';
 
         echo '<p class="notice notice-info" style="padding:12px 15px;">';
         echo self::get_notice_message();
@@ -37,14 +37,14 @@ class View {
 
         echo '<p>';
         printf(
-            esc_html__( 'Adresse de connexion actuelle : %s', 'wpsoluces' ),
+            esc_html__( 'Adresse de connexion actuelle : %s', 'wpstarterpack' ),
             '<code>' . esc_url( home_url( '/' . Model::slug() ) ) . '</code>'
         );
         echo '</p>';
 
         echo '<form method="post" action="options.php">';
-        settings_fields( 'wpsc_lr_group' );
-        do_settings_sections( 'wpsc-lr' );
+        settings_fields( 'wpsp_lr_group' );
+        do_settings_sections( 'wpsp-lr' );
         submit_button();
         echo '</form>';
         echo '</div>';
@@ -58,7 +58,7 @@ class View {
         echo '<input type="checkbox" name="' . esc_attr( Model::OPTION_ACTIVE ) . '" value="1" ';
         checked( Model::is_active() );
         echo '/> ';
-        esc_html_e( 'Activer le déplacement de la connexion', 'wpsoluces' );
+        esc_html_e( 'Activer le déplacement de la connexion', 'wpstarterpack' );
         echo '</label>';
     }
 
@@ -66,7 +66,7 @@ class View {
      * Champ slug
      */
     public static function slug_field(): void {
-        echo '<span class="wpsc-url-prefix">' . esc_url( home_url( '/' ) ) . '</span>';
+        echo '<span class="wpsp-url-prefix">' . esc_url( home_url( '/' ) ) . '</span>';
         echo '<input type="text" name="' . esc_attr( Model::OPTION_SLUG ) . '" value="' . esc_attr( Model::slug() ) . '" class="regular-text" placeholder="' . esc_attr( Model::DEFAULT_SLUG ) . '" />';
     }
 }

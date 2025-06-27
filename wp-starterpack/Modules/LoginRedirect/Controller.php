@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\LoginRedirect;
+namespace WPStarterPack\Modules\LoginRedirect;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -59,17 +59,17 @@ class Controller {
 	 * ------------------------------------------------------------------ */
 	public static function add_settings_page(): void {
 		self::$page_hook = add_options_page(
-			__( 'URL de connexion', 'wpsoluces' ),
+			__( 'URL de connexion', 'wpstarterpack' ),
 			'URL de connexion',
 			'manage_options',
-			'wpsc-lr',
+			'wpsp-lr',
 			[ self::class, 'render_settings_page' ]
 		);
 	}
 
         public static function register_settings(): void {
                 register_setting(
-                        'wpsc_lr_group',
+                        'wpsp_lr_group',
                         Model::OPTION_ACTIVE,
                         [
                                 'type'              => 'boolean',
@@ -79,7 +79,7 @@ class Controller {
                 );
 
                 register_setting(
-                        'wpsc_lr_group',
+                        'wpsp_lr_group',
                         Model::OPTION_SLUG,
                        [
                                 'type'              => 'string',
@@ -90,26 +90,26 @@ class Controller {
 
 
                add_settings_section(
-                       'wpsc_lr_section',
-                       __( 'Déplacement de la page de connexion', 'wpsoluces' ),
+                       'wpsp_lr_section',
+                       __( 'Déplacement de la page de connexion', 'wpstarterpack' ),
                        '__return_null',
-                       'wpsc-lr'
+                       'wpsp-lr'
                );
 
                 add_settings_field(
-                        'wpsc_lr_active',
-                        __( 'Activer', 'wpsoluces' ),
+                        'wpsp_lr_active',
+                        __( 'Activer', 'wpstarterpack' ),
                         [ self::class, 'render_checkbox_field' ],
-                        'wpsc-lr',
-                        'wpsc_lr_section'
+                        'wpsp-lr',
+                        'wpsp_lr_section'
                 );
 
                 add_settings_field(
-                        'wpsc_lr_slug',
-                        __( 'Slug de connexion', 'wpsoluces' ),
+                        'wpsp_lr_slug',
+                        __( 'Slug de connexion', 'wpstarterpack' ),
                         [ View::class, 'slug_field' ],
-                        'wpsc-lr',
-                        'wpsc_lr_section'
+                        'wpsp-lr',
+                        'wpsp_lr_section'
                 );
 
         }
