@@ -2,8 +2,8 @@
 ## Installation
 
 
-1. **Téléversez wp-starterpack.zip** depuis le backoffice WordPress ou **Copiez** le dossier `wp-starterpack/` dans :
 
+1. **Téléversez wpstarterpack.zip** depuis le backoffice WordPress ou **Copiez** le dossier `wpstarterpack/` dans :
 ```
 
 wp-content/plugins/
