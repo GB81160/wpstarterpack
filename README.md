@@ -2,9 +2,8 @@
 ## Installation
 
 
+
 1. **Téléversez wpstarterpack.zip** depuis le backoffice WordPress ou **Copiez** le dossier `wpstarterpack/` dans :
-
-
 ```
 
 wp-content/plugins/
