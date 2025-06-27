@@ -39,6 +39,7 @@ define( 'WPSC_URL',  plugin_dir_url( __FILE__ ) );
 /* Amorçage                                                                  */
 /* ------------------------------------------------------------------------- */
 require_once WPSC_PATH . '/Core/Init.php';
+require_once WPSC_PATH . '/Core/Uninstall.php';
 
 /**
  * Initialise tous les modules une fois les plugins chargés.
@@ -69,29 +70,6 @@ register_deactivation_hook( __FILE__, 'wpsc_core_deactivate' );
  * Nettoyage complet lors de la désinstallation du plugin.
  */
 function wpsc_core_uninstall(): void {
-    global $wpdb;
-
-    // Options enregistrées par les modules
-    $options = [
-        'wpsc_lr_active',
-        'wpsc_lr_rewrite_flushed',
-        'wpsc_gtm_id',
-        'wpsc_gtm_active',
-    ];
-
-    foreach ( $options as $option ) {
-        delete_option( $option );
-        delete_site_option( $option );
-    }
-
-    // Transient de configuration GTM
-    delete_transient( 'wpsc_gtm_settings' );
-    delete_site_transient( 'wpsc_gtm_settings' );
-
-    // Tous les transients du LoginLimiter
-    if ( $wpdb instanceof \wpdb ) {
-        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_wpsc_ll_%'" );
-        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_wpsc_ll_%'" );
-    }
+    \WPSolucesCore\Core\Uninstall::run();
 }
 register_uninstall_hook( __FILE__, 'wpsc_core_uninstall' );
