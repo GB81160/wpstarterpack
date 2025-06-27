@@ -2,7 +2,7 @@
 ## Installation
 
 
-1. **Copiez** le dossier `wpsoluces-core/` dans :
+1. **Téléversez le plugin.zip** ou **Copiez** le dossier `wpsoluces-core/` dans :
 
 ```
 
