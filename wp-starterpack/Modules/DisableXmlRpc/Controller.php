@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\DisableXmlRpc;
+namespace WPStarterPack\Modules\DisableXmlRpc;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -62,8 +62,8 @@ class Controller {
             ( isset( $_SERVER['REQUEST_URI']  ) && false !== stripos( $_SERVER['REQUEST_URI'],  'xmlrpc.php' ) )
         ) {
             wp_die(
-                esc_html__( 'XML-RPC désactivé sur ce site.', 'wpsoluces' ),
-                esc_html__( 'Accès interdit',            'wpsoluces' ),
+                esc_html__( 'XML-RPC désactivé sur ce site.', 'wpstarterpack' ),
+                esc_html__( 'Accès interdit',            'wpstarterpack' ),
                 [ 'response' => 403 ]
             );
         }

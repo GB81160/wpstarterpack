@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\DuplicatePost;
+namespace WPStarterPack\Modules\DuplicatePost;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,7 +22,7 @@ class Controller {
 		add_filter( 'page_row_actions', [ self::class, 'add_link' ], 10, 2 );
 
 		// Action admin
-		add_action( 'admin_action_wpsc_duplicate_post', [ self::class, 'handle_duplicate' ] );
+		add_action( 'admin_action_wpsp_duplicate_post', [ self::class, 'handle_duplicate' ] );
 
 		// Message de confirmation
 		add_action( 'admin_notices', [ self::class, 'admin_notice' ] );
@@ -40,16 +40,16 @@ class Controller {
 		$url = wp_nonce_url(
 			add_query_arg(
 				[
-					'action' => 'wpsc_duplicate_post',
+					'action' => 'wpsp_duplicate_post',
 					'post'   => $post->ID,
 				],
 				admin_url( 'admin.php' )
 			),
-			'wpsc_duplicate_post_' . $post->ID
+			'wpsp_duplicate_post_' . $post->ID
 		);
 
 		$actions['wps_dup'] = '<a href="' . esc_url( $url ) . '">' .
-			esc_html__( 'Dupliquer', 'wpsoluces' ) . '</a>';
+			esc_html__( 'Dupliquer', 'wpstarterpack' ) . '</a>';
 
 		return $actions;
 	}
@@ -64,9 +64,9 @@ class Controller {
 		if (
 			! $post_id ||
 			! current_user_can( 'edit_posts' ) ||
-			! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'wpsc_duplicate_post_' . $post_id )
+			! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'wpsp_duplicate_post_' . $post_id )
 		) {
-			wp_die( __( 'Action non autorisée.', 'wpsoluces' ) );
+			wp_die( __( 'Action non autorisée.', 'wpstarterpack' ) );
 		}
 
 		$orig = get_post( $post_id );
@@ -76,7 +76,7 @@ class Controller {
 		}
 
                 /* 1. Nouveau brouillon */
-                $suffix = apply_filters( 'wpsc_duplicate_title_suffix', ' (copie)' );
+                $suffix = apply_filters( 'wpsp_duplicate_title_suffix', ' (copie)' );
                 $new_id = wp_insert_post( [
                         'post_title'   => $orig->post_title . $suffix,
                         'post_content' => $orig->post_content,
@@ -117,7 +117,7 @@ class Controller {
 			? admin_url( 'edit.php' )
 			: admin_url( 'edit.php?post_type=' . $orig->post_type );
 
-		wp_safe_redirect( add_query_arg( [ 'wpsc_duplicated' => 1 ], $list_url ) );
+		wp_safe_redirect( add_query_arg( [ 'wpsp_duplicated' => 1 ], $list_url ) );
 		exit;
 	}
 
@@ -126,9 +126,9 @@ class Controller {
 	 * ------------------------------------------------------------------ */
 	public static function admin_notice(): void {
 
-		if ( isset( $_GET['wpsc_duplicated'] ) ) {
+		if ( isset( $_GET['wpsp_duplicated'] ) ) {
 			echo '<div class="notice notice-success is-dismissible"><p>' .
-			     esc_html__( 'Copie créée avec succès. Le brouillon est prêt.', 'wpsoluces' ) .
+			     esc_html__( 'Copie créée avec succès. Le brouillon est prêt.', 'wpstarterpack' ) .
 			     '</p></div>';
 		}
 	}

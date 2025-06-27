@@ -1,5 +1,5 @@
 <?php
-namespace WPSolucesCore\Modules\LoginLimiter;
+namespace WPStarterPack\Modules\LoginLimiter;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -58,10 +58,10 @@ class Controller {
         $mins = (int) ceil( self::$remain / 60 );
 
         return new \WP_Error(
-            'wpsc_login_lock',
+            'wpsp_login_lock',
             sprintf(
                 /* translators: %d = minutes */
-                __( 'Trop de tentatives ! Réessayez dans %d&nbsp;minute(s).', 'wpsoluces' ),
+                __( 'Trop de tentatives ! Réessayez dans %d&nbsp;minute(s).', 'wpstarterpack' ),
                 $mins
             )
         );
@@ -77,7 +77,7 @@ class Controller {
         $mins = (int) ceil( self::$remain / 60 );
 
         return sprintf(
-            __( 'Trop de tentatives ! Réessayez dans %d&nbsp;minute(s).', 'wpsoluces' ),
+            __( 'Trop de tentatives ! Réessayez dans %d&nbsp;minute(s).', 'wpstarterpack' ),
             $mins
         );
     }
