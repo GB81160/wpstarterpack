@@ -23,6 +23,9 @@ class Controller {
             Model::reset( $login );
         } );
 
+        /* Suppression automatique planifiée */
+        add_action( Model::CLEANUP_HOOK, [ Model::class, 'cleanup' ] );
+
         /* Remplace le message WP si c’est notre blocage  */
         add_filter( 'login_errors', [ self::class, 'replace_error' ] );
     }
