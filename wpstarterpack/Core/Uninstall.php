@@ -10,7 +10,6 @@ use WPStarterPack\Modules\LoginRedirect\Model as LoginRedirect;
  */
 class Uninstall {
     public static function run(): void {
-        global $wpdb;
 
         // Autoload plugin classes if the plugin was not fully bootstrapped.
         spl_autoload_register( function ( $class ) {
@@ -47,30 +46,6 @@ class Uninstall {
         delete_site_transient( TagManager::TRANSIENT_KEY );
 
         // Tous les transients du LoginLimiter
-        if ( $wpdb instanceof \wpdb ) {
-            $prefix = 'wpsp_ll_';
-            $like   = $wpdb->esc_like( $prefix );
-            $names  = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_{$like}%' OR option_name LIKE '_transient_timeout_{$like}%'" );
-            foreach ( $names as $name ) {
-                if ( str_starts_with( $name, '_transient_timeout_' ) ) {
-                    delete_option( $name );
-                } elseif ( str_starts_with( $name, '_transient_' ) ) {
-                    $transient = substr( $name, 11 ); // _transient_
-                    delete_transient( $transient );
-                }
-            }
-
-            if ( is_multisite() ) {
-                $site_names = $wpdb->get_col( "SELECT meta_key FROM {$wpdb->sitemeta} WHERE meta_key LIKE '_site_transient_{$like}%' OR meta_key LIKE '_site_transient_timeout_{$like}%'" );
-                foreach ( $site_names as $name ) {
-                    if ( str_starts_with( $name, '_site_transient_timeout_' ) ) {
-                        delete_site_option( $name );
-                    } elseif ( str_starts_with( $name, '_site_transient_' ) ) {
-                        $transient = substr( $name, 16 ); // _site_transient_
-                        delete_site_transient( $transient );
-                    }
-                }
-            }
-        }
+        LoginLimiter::delete_all_transients();
     }
 }
