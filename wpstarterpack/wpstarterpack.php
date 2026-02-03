@@ -32,8 +32,13 @@ if ( version_compare( PHP_VERSION, '8.2', '<' ) ) {
 /* ------------------------------------------------------------------------- */
 /* Chemins utiles                                                            */
 /* ------------------------------------------------------------------------- */
-define( 'WPSP_PATH', __DIR__ );
-define( 'WPSP_URL',  plugin_dir_url( __FILE__ ) );
+if ( ! defined( 'WPSP_PATH' ) ) {
+    define( 'WPSP_PATH', __DIR__ );
+}
+
+if ( ! defined( 'WPSP_URL' ) ) {
+    define( 'WPSP_URL', plugin_dir_url( __FILE__ ) );
+}
 
 /* ------------------------------------------------------------------------- */
 /* Amorçage                                                                  */

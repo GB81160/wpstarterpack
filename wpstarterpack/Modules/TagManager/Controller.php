@@ -72,7 +72,7 @@ class Controller {
             Model::OPTION_KEY_ACTIVE,
             [
                 'type'              => 'boolean',
-                'sanitize_callback' => fn ( $v ) => $v ? 1 : 0,
+                'sanitize_callback' => static fn( $v ) => $v ? 1 : 0,
                 'default'           => 0,
             ]
         );
@@ -80,7 +80,7 @@ class Controller {
         add_settings_section(
             'wpsp_gtm_section',
             'Balise Google Tag Manager',
-            fn() => printf(
+            static fn() => printf(
                 '<p>%s</p>',
                 esc_html__( 'Indiquez l’ID (GTM-XXXXXXX) puis cochez pour activer.', 'wpstarterpack' )
             ),
@@ -108,7 +108,9 @@ class Controller {
     public static function sanitize_gtm_id( string $raw ): string {
 
         $id     = strtoupper( trim( $raw ) );
-        $active = isset( $_POST[ Model::OPTION_KEY_ACTIVE ] ) ? (int) $_POST[ Model::OPTION_KEY_ACTIVE ] : 0;
+        $active = isset( $_POST[ Model::OPTION_KEY_ACTIVE ] )
+            ? (int) wp_unslash( $_POST[ Model::OPTION_KEY_ACTIVE ] )
+            : 0;
 
         if ( $active && ! preg_match( '/^GTM-[A-Z0-9]{7}$/', $id ) ) {
             add_settings_error(
@@ -153,22 +155,19 @@ class Controller {
 
         printf(
             "\n<!-- Google Tag Manager -->\n"
-          . "<script>\n"
-          . "    document.addEventListener('DOMContentLoaded', function () {\n"
-          . "        (function (w, d, s, l, i) {\n"
-          . "            w[l] = w[l] || [];\n"
-          . "            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });\n"
-          . "            var f = d.getElementsByTagName(s)[0];\n"
-          . "            var j = d.createElement(s);\n"
-          . "            var dl = l !== 'dataLayer' ? '&l=' + l : '';\n"
-          . "            j.async = true;\n"
-          . "            j.defer = true;\n"
-          . "            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;\n"
-          . "            f.parentNode.insertBefore(j, f);\n"
-          . "        })(window, document, 'script', 'dataLayer', '%s');\n"
-          . "    });\n"
-          . "</script>\n"
-          . "<!-- End Google Tag Manager -->\n",
+            . "<script>\n"
+            . "    (function (w, d, s, l, i) {\n"
+            . "        w[l] = w[l] || [];\n"
+            . "        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });\n"
+            . "        var f = d.getElementsByTagName(s)[0];\n"
+            . "        var j = d.createElement(s);\n"
+            . "        var dl = l !== 'dataLayer' ? '&l=' + l : '';\n"
+            . "        j.async = true;\n"
+            . "        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;\n"
+            . "        f.parentNode.insertBefore(j, f);\n"
+            . "    })(window, document, 'script', 'dataLayer', '%s');\n"
+            . "</script>\n"
+            . "<!-- End Google Tag Manager -->\n",
             esc_js( $s['id'] )
         );
     }

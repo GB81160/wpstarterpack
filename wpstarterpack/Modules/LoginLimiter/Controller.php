@@ -38,10 +38,11 @@ class Controller {
      * @return \WP_User|\WP_Error|null
      */
     public static function check_and_count( $user, string $login, string $password ) {
-
         if ( empty( $login ) ) {
             return $user; // pas de login fourni
         }
+
+        $login = Model::normalize_login( $login );
 
         /* --- Si erreur WP précédente ➜ on compte l’échec --- */
         if ( $user instanceof \WP_Error ) {
