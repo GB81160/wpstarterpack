@@ -33,7 +33,7 @@ class Controller {
 	 * ------------------------------------------------------------------ */
 	public static function add_link( array $actions, \WP_Post $post ): array {
 
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return $actions;
 		}
 
@@ -59,36 +59,38 @@ class Controller {
 	 * ------------------------------------------------------------------ */
 	public static function handle_duplicate(): void {
 
-		$post_id = intval( $_GET['post'] ?? 0 );
+		$post_id = absint( wp_unslash( $_GET['post'] ?? 0 ) );
 
 		if (
 			! $post_id ||
-			! current_user_can( 'edit_posts' ) ||
-			! wp_verify_nonce( $_GET['_wpnonce'] ?? '', 'wpsp_duplicate_post_' . $post_id )
+			! current_user_can( 'edit_post', $post_id ) ||
+			! wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ?? '' ), 'wpsp_duplicate_post_' . $post_id )
 		) {
-			wp_die( __( 'Action non autorisée.', 'wpstarterpack' ) );
+			wp_die( esc_html__( 'Action non autorisée.', 'wpstarterpack' ) );
 		}
 
 		$orig = get_post( $post_id );
 		if ( ! $orig ) {
-			wp_redirect( admin_url( 'edit.php' ) );
+			wp_safe_redirect( admin_url( 'edit.php' ) );
 			exit;
 		}
 
-                /* 1. Nouveau brouillon */
-                $suffix = apply_filters( 'wpsp_duplicate_title_suffix', ' (copie)' );
-                $new_id = wp_insert_post( [
-                        'post_title'   => $orig->post_title . $suffix,
-                        'post_content' => $orig->post_content,
-                        'post_excerpt' => $orig->post_excerpt,
-                        'post_status'  => 'draft',
-                        'post_type'    => $orig->post_type,
-                        'post_author'  => get_current_user_id(),
-			'post_parent'  => $orig->post_parent,
-			'menu_order'   => $orig->menu_order,
-			'comment_status' => $orig->comment_status,
-			'ping_status'    => $orig->ping_status,
-		] );
+		/* 1. Nouveau brouillon */
+		$suffix = apply_filters( 'wpsp_duplicate_title_suffix', ' (copie)' );
+		$new_id = wp_insert_post(
+			[
+				'post_title'     => $orig->post_title . $suffix,
+				'post_content'   => $orig->post_content,
+				'post_excerpt'   => $orig->post_excerpt,
+				'post_status'    => 'draft',
+				'post_type'      => $orig->post_type,
+				'post_author'    => get_current_user_id(),
+				'post_parent'    => $orig->post_parent,
+				'menu_order'     => $orig->menu_order,
+				'comment_status' => $orig->comment_status,
+				'ping_status'    => $orig->ping_status,
+			]
+		);
 
 		if ( is_wp_error( $new_id ) ) {
 			wp_die( $new_id->get_error_message() );
@@ -100,17 +102,30 @@ class Controller {
 			wp_set_object_terms( $new_id, $terms, $taxonomy );
 		}
 
-                /* 3. Métadonnées */
-                foreach ( get_post_meta( $post_id ) as $key => $values ) {
-                        foreach ( $values as $value ) {
-                                add_post_meta( $new_id, $key, maybe_unserialize( $value ) );
-                        }
-                }
+		/* 3. Métadonnées */
+		$skip_meta_keys = [
+			'_edit_lock',
+			'_edit_last',
+			'_wp_old_slug',
+			'_wp_trash_meta_status',
+			'_wp_trash_meta_time',
+		];
 
-                /* Image mise en avant */
-                if ( $thumb = get_post_thumbnail_id( $post_id ) ) {
-                        set_post_thumbnail( $new_id, $thumb );
-                }
+		foreach ( get_post_meta( $post_id ) as $key => $values ) {
+			if ( in_array( $key, $skip_meta_keys, true ) ) {
+				continue;
+			}
+
+			foreach ( $values as $value ) {
+				add_post_meta( $new_id, $key, $value );
+			}
+		}
+
+		/* Image mise en avant */
+		$thumb = get_post_thumbnail_id( $post_id );
+		if ( $thumb ) {
+			set_post_thumbnail( $new_id, $thumb );
+		}
 
 		/* 4. Retour à la liste avec paramètre de confirmation */
 		$list_url = ( $orig->post_type === 'post' )
