@@ -13,8 +13,13 @@ class Model {
 
     private const PREFIX = 'wpsp_ll_';
 
+    public static function normalize_login( string $login ): string {
+        $normalized = sanitize_user( $login, true );
+        return $normalized !== '' ? $normalized : strtolower( $login );
+    }
+
     private static function key( string $login ): string {
-        return self::PREFIX . md5( strtolower( $login ) );
+        return self::PREFIX . md5( strtolower( self::normalize_login( $login ) ) );
     }
 
     public static function get_attempts( string $login ): int {
